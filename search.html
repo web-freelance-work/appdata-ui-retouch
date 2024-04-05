@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+</head>
+<style>
+    @font-face {
+        font-family: 'yg-jalnan';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: 'KOTRAHOPE';
+        src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/KOTRAHOPE.woff2') format('woff2');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    body {
+        margin: 0;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        color: #333;
+        font-family: 'yg-jalnan', Arial, sans-serif;
+        text-align: start;
+        width: 100%;
+        height: 100vh;
+    }
+
+    h2 {
+        text-align: center;
+        color: #003366;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin: 20px auto;
+        width: 80%;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    li {
+        font-family: 'KOTRAHOPE', Arial, sans-serif;
+        font-size: 18px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-bottom: 1px solid #eeeeee;
+    }
+
+    li:last-child {
+        border-bottom: none;
+    }
+
+    ul:hover {
+        transform: translateY(-5px);
+    }
+
+    a {
+        color: #006699;
+        text-decoration: none;
+        background-color: #e7f3ff;
+        border-radius: 15px;
+        padding: 5px 10px;
+        display: inline-block;
+        margin: 5px 0;
+        font-size: 0.9em;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    a:hover {
+        background-color: #d0eaff;
+        text-decoration: underline;
+        transform: scale(1.05);
+    }
+
+    .warning {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        padding: .75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: .25rem;
+        box-shadow: 0 4px 8px rgba(244, 67, 54, 0.2);
+    }
+
+    .up-to-date {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        padding: .75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: .25rem;
+        box-shadow: 0 4px 8px rgba(76, 175, 80, 0.2);
+    }
+</style>
+
+<body>
+    <h2>Search Results for "{{ program_name }}" (Version: "{{ program_version }}")</h2>
+    <h2>Latest Version: {{ latest_version }}</h2>
+    <ul>
+        <!--{% for cpe in cpe_results %}
+            <li>{{ cpe[0] }}</li>
+        {% endfor %}-->
+        <li>✔️ CPE: {{all_vulnerable[0][0]}}</li>
+        <li>✔️ Exploit ID:
+            {% if all_vulnerable[0][2] %}
+            {% for exploit_id in all_vulnerable[0][2].split(',') %}
+            <a href="https://www.exploit-db.com/exploits/{{ exploit_id.strip() }}" target="_blank">{{ exploit_id }}</a>
+            {% if not loop.last %}, {% endif %}
+            {% endfor %}
+            {% else %}
+            NULL
+            {% endif %}
+        </li>
+        <li>✔️ CVE:
+            {% if all_vulnerable[0][1] %}
+            {% for cve in all_vulnerable[0][1].split(',') %}
+            {% if cve.strip() != "NULL" %}
+            <a href="https://nvd.nist.gov/vuln/detail/{{ cve.strip() }}" target="_blank">{{ cve }}</a>
+            {% if not loop.last %}, {% endif %}
+            {% else %}
+            NULL
+            {% endif %}
+            {% endfor %}
+            {% else %}
+            N/A
+            {% endif %}
+        </li>
+        {% if latest_version != program_version %}
+        <p style="color: red;">Warning: Your current version "{{ program_version }}" is not the latest version. Please
+            update to version "{{ latest_version }}" for improved security and features.</p>
+        {% elif latest_version == program_version %}
+        <p style="color: green;">Your current version "{{ program_version }}" is up to date.</p>
+        {% endif %}
+    </ul>
+</body>
+
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <style>
+        @font-face {
+            font-family: 'yg-jalnan';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_four@1.2/JalnanOTF00.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'KOTRAHOPE';
+            src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/KOTRAHOPE.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'yg-jalnan', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            text-align: start;
+            width: 100%;
+            height: auto;
+            min-height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            color: #003366;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        ul {
+            font-family: 'KOTRAHOPE', Arial, sans-serif;
+            font-size: 19px;
+            line-height: 1.2;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 80%;
+            margin: auto;
+            margin-top: 20px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        ul:hover {
+            transform: translateY(-5px);
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        li {
+            font-family: 'KOTRAHOPE', Arial, sans-serif;
+            font-size: 18px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        ol {
+            list-style-type: none;
+            padding-inline-start: 30px;
+        }
+
+        a {
+            color: #006699;
+            text-decoration: none;
+            background-color: #e7f3ff;
+            border-radius: 15px;
+            padding: 2px 8px;
+            display: inline-block;
+            margin-right: 5px;
+            font-size: 0.9em;
+            transition: background-color 0.2s;
+        }
+
+        a:hover {
+            background-color: #d0eaff;
+            text-decoration: underline;
+        }
+
+        .container {
+            padding: 10px;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .warning,
+        .up-to-date {
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .warning {
+            background-color: #ffdddd;
+            border-left: 6px solid #f44336;
+            animation: pulseWarning 2s infinite;
+        }
+
+        .up-to-date {
+            background-color: #ddffdd;
+            border-left: 6px solid #4CAF50;
+            animation: pulseSuccess 2s infinite;
+        }
+
+        @keyframes pulseWarning {
+            0% {
+                box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(244, 67, 54, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(244, 67, 54, 0);
+            }
+        }
+
+        @keyframes pulseSuccess {
+            0% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+            }
+
+            70% {
+                box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+            }
+        }
+
+        .show-more-btn {
+            cursor: pointer;
+            color: #005a99;
+            font-weight: bold;
+            background: none;
+            border: none;
+            margin: 5px;
+            padding: 5px;
+            text-decoration: underline;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .show-more-btn:hover {
+            color: #003366;
+            text-decoration: none;
+        }
+
+        .cve-list {
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .cve-list a {
+            margin-bottom: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>설치된 어플리케이션 취약점 확인</h1>
+
+    <ul>
+
+        {% for x, y, z in names_versions %}
+        <div class="container">
+            <li>◾ {{y}} {{z}}</li>
+            {% for i in range(length) %}
+            {% if x[0] == test[i] %}
+            {% for j in range(i, i+1) %}
+            {% if x[0] == test_set[j] %} Lastest Version : {{new_p[index_list[j]]}}
+            {% if only_cpe_version[j] != new_p[index_list[j]] %}
+            <p style="color: red;">Warning: Your current version "{{ only_cpe_version[j] }}" is not the latest version.
+                Please update to version "{{ new_p[index_list[j]] }}" for improved security and features.</p>
+            {% elif latest_version == program_version %}
+            <p style="color: green;">Your current version "{{only_cpe_version[j] }}" is up to date.</p>
+            {% endif %}
+            {% endif %}{% endfor %}
+            <ol>
+
+                <li>✔️ CPE: {{filtered_results[i][0]}}</li>
+                <li>✔️ CVE:
+                    <span class="cve-list">
+                        {% set cve_items = filtered_results[i][1].split(',') %}
+
+                        {% for cve_item in cve_items[:3] %}
+                        {% if cve_item.strip() != "NULL" %}
+                        <a href="https://nvd.nist.gov/vuln/detail/{{ cve_item.strip() }}" target="_blank">{{ cve_item
+                            }}</a>{% if not loop.last %}, {% endif %}
+                        {% else %}NULL {% endif %}
+                        {% endfor %}
+                        {% if cve_items | length > 3 %}
+                        <span class="hidden">
+                            {% for cve_item in cve_items[3:] %}
+                            <a href="https://nvd.nist.gov/vuln/detail/{{ cve_item.strip() }}" target="_blank">{{
+                                cve_item
+                                }}</a>{% if not loop.last %}, {% endif %}
+                            {% endfor %}
+                        </span>
+                        <span class="show-more-btn">...더보기</span>
+                        {% endif %}
+                    </span>
+                </li>
+                <li>✔️ Exploit ID: {% if filtered_results[i][2] is none %}NULL{% else %}{% for exploit_id in
+                    filtered_results[i][2].split(',') %}
+                    <a href="https://www.exploit-db.com/exploits/{{ exploit_id.strip() }}" target="_blank">{{ exploit_id
+                        }}</a>
+                    {% if not loop.last %}, {% endif %}
+                    {% endfor %}{% endif %}
+                </li>
+            </ol>
+            {% endif %}
+            {% endfor %}
+        </div>
+
+        {% endfor %}{% set index = j %}
+    </ul>
+</body>
+
+</html>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        var showMoreBtns = document.querySelectorAll(".show-more-btn");
+
+        showMoreBtns.forEach(function (btn) {
+            btn.addEventListener("click", function () {
+                // 클릭된 버튼의 이전 형제 요소(.hidden)를 토글합니다.
+                var hiddenSpan = this.previousElementSibling;
+                hiddenSpan.classList.toggle("hidden");
+
+                // 클릭된 버튼의 텍스트를 변경합니다.
+                if (hiddenSpan.classList.contains("hidden")) {
+                    this.textContent = "...더보기";
+                } else {
+                    this.textContent = "접기";
+                }
+            });
+        });
+    });
+
+</script>
